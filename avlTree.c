@@ -2,8 +2,11 @@
 #include<stdlib.h>
 #include "avlTree.h"
 
+#define COUNT 10
+
 int nodeCount = 0;
-int isVerbose = 0;
+int isVerbose = FALSE;
+// int* ptr;
 
 
 int max(int a, int b);
@@ -13,18 +16,30 @@ node_t *rightRotate( node_t *y);
 node_t *leftRotate( node_t *x);
 int getBalanceFactor( node_t *N);
 node_t *maxValueNode( node_t* node);
-// void preOrder( node_t *root); 
-// node_t *findKey(node_t *node, int key);
-// void freeTree(node_t *root);
 
 
-// node_t *minValueNode(node_t* node) 
-// { 
-//   node_t* current = node; 
-//   while (current->left != NULL) 
-//     current = current->left; 
-//   return current; 
-// }
+void print2D(node_t *node, int space)
+{
+
+    int i = 0;
+    // Base case
+    if (node == NULL) {
+    return; 
+    }
+    
+    space += COUNT;
+
+    print2D(node->right, space);
+
+    fprintf(stdout, "\n");
+    for (i = COUNT; i < space; i++) {
+        fprintf(stdout, " "); 
+    }
+    fprintf(stdout, "%7d\n", node->key);
+    // Process left child
+    print2D(node->left, space); 
+
+}
 
 node_t *maxValueNode(node_t* node) 
 { 
@@ -49,15 +64,26 @@ node_t *findKey( node_t *t, int key)
         return t;
 }
 
-void freeTree(node_t *root){
+void freeTree(node_t *root)
+{
+    if ( root != NULL ) return;
+    {
+        freeTree(root -> left);
+        freeTree(root -> right);
+        free(root);
+
+    }    
 }
+
 
 int height( node_t *N) 
 { 
   if (N == NULL) 
     return 0; 
   return N->height; 
-} 
+}
+
+
 int max(int a, int b) 
 { 
   return (a > b)? a : b; 
@@ -65,8 +91,11 @@ int max(int a, int b)
 
 node_t *newNode(int key) 
 { 
-   node_t *node = ( node_t*) 
-            malloc(sizeof( node_t)); 
+    
+  node_t *node = malloc(sizeof(node_t));
+  
+        // ptr=malloc(sizeof(node_t));
+//   node_t *nNode =malloc(sizeof(node_t)); 
   node->key = key; 
   node->left = NULL; 
   node->right = NULL; 
@@ -80,9 +109,11 @@ node_t *newNode(int key)
 node_t *rightRotate( node_t *y) 
 { 
   node_t *x = y->left; 
-  node_t *T2 = x->right; 
+  node_t *T2 = x->right;
+
   x->right = y; 
   y->left = T2; 
+
   y->height = max(height(y->left), height(y->right))+1; 
   x->height = max(height(x->left), height(x->right))+1; 
   return x; 
@@ -106,7 +137,7 @@ int getBalanceFactor( node_t *N)
   return height(N->left) - height(N->right); 
 } 
 
-node_t *insertNode(node_t* node, int key) {
+node_t *insertNode(node_t *node, int key) {
     int balanceFactor;
 
     if (node == NULL)
@@ -117,30 +148,30 @@ node_t *insertNode(node_t* node, int key) {
         node->right = insertNode(node->right, key);
     else {
         node->count++;
-        return node;
+        // return node;
     }
 
     node->height = 1 + max(height(node->left), height(node->right));
 
     balanceFactor = getBalanceFactor(node);
 
-    if (balanceFactor > 1) {
-        if (key < node->left->key) {
-            return rightRotate(node);
-        }
-        else if (key > node->left->key) {
-            node->left = leftRotate(node->left);
-            return rightRotate(node);
-        }
+    if (balanceFactor > 1 && key < node->left->key) {
+        return rightRotate(node);
     }
-    if (balanceFactor < -1) {
-        if (key > node->right->key) {
-            return leftRotate(node);
-        }
-        else if (key < node->right->key) {
-            node->left = rightRotate(node->left);
-            return leftRotate(node);
-        }
+
+    if (balanceFactor < -1 && key > node->right->key) {
+        return leftRotate(node);
+    }
+
+    if (balanceFactor > 1 && key > node->left->key) {
+        node->left = leftRotate(node->left);
+        return rightRotate(node);
+    }
+
+    if (balanceFactor < -1 && key < node->right->key) {
+        node->right = rightRotate(node->right);
+        return leftRotate(node);
+    
     }
     return node;
 }
