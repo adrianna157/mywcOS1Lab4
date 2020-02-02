@@ -1,9 +1,8 @@
 CC = gcc 
-# DEFINES = -DTEST_MODE
 CFLAGS = -g -ggdb -Wall -Wshadow -Wunreachable-code -Wredundant-decls -Wmissing-declarations -Wold-style-definition -Wmissing-prototypes -Wdeclaration-after-statement
 PROG = mywc
 PROG2 = avlMain
-
+DEFINES = DTEST_MODE
 
 all: $(PROG) $(PROG2)
 
@@ -12,8 +11,7 @@ mywc: mywc.o
 
 #this is what you need to build, if these files have updates then rebuild
 mywc.o: mywc.c 
-# mywc.h
-	$(CC) $(CFLAGS) -c mywc.c
+	$(CC) $(CFLAGS) -c  mywc.c
 
 avlMain: avlMain.o avlTree.o
 	$(CC) $(CFLAGS) -o avlMain avlMain.o avlTree.o 

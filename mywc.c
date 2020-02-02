@@ -111,16 +111,15 @@ int main (int argc, char **argv)
     {
       printf("The file name is %s", filename);
 
-      fclose(iFile);
-  }
-
-  exit(0);
-} 
-
+    fclose(iFile);
+    }
+ return 0;   
+}
    
   
 
     
+
 
 
  

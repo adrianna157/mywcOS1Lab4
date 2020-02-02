@@ -32,6 +32,7 @@ void print2D(node_t *node, int space)
     print2D(node->right, space);
 
     fprintf(stdout, "\n");
+    
     for (i = COUNT; i < space; i++) {
         fprintf(stdout, " "); 
     }
@@ -242,24 +243,4 @@ void preOrder( node_t *root)
     preOrder(root->right); 
   } 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
